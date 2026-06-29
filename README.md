@@ -85,30 +85,6 @@ python login.py
 
 ---
 
-## 📷 Screenshots
-
-> Screenshots will be added soon.
-
-- Login Page
-- Registration Page
-- Student Management
-- Course Management
-- Result Management
-- Reports
-
----
-
-## 🎯 Future Improvements
-
-- Export Results to PDF
-- Email Result Notifications
-- Attendance Management
-- Role-Based Authentication
-- Dashboard Analytics
-- Data Backup & Restore
-
----
-
 ## 👨‍💻 Author
 
 **Aadarsh Yadav**
