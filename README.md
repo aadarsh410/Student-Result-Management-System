@@ -87,7 +87,7 @@ python login.py
 
 ## 👨‍💻 Author
 
-**Aadarsh Yadav**
+**Adarsh Yadav**
 
 Cybersecurity Enthusiast
 
