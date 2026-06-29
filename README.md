@@ -89,7 +89,7 @@ python login.py
 
 **Aadarsh Yadav**
 
-Cybersecurity Enthusiast | Python Developer
+Cybersecurity Enthusiast
 
 GitHub: https://github.com/aadarsh410
 
