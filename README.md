@@ -1,4 +1,4 @@
-🎓 Student Result Management System
+# 🎓 Student Result Management System
 
 A desktop-based **Student Result Management System** developed using **Python, Tkinter, SQLite, and Pillow (PIL)**. The application simplifies student record management, course administration, and examination result processing through an intuitive graphical user interface.
 
@@ -111,7 +111,7 @@ python login.py
 
 ## 👨‍💻 Author
 
-**Adarsh Yadav**
+**Aadarsh Yadav**
 
 Cybersecurity Enthusiast | Python Developer
 
