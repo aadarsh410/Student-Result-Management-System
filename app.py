@@ -4,6 +4,7 @@ from course import CourseClass
 from student import StudentClass
 from result import ResultClass
 from report import reportClass
+from database import initialize_database
 import subprocess
 import sys
 import os
@@ -110,6 +111,9 @@ class YADAVPROJECT:
 
 # Function to start dashboard after login
 def open_dashboard(username):
+    # Initialize database and create all tables if they don't exist
+    initialize_database()
+
     root = Tk()
     app = YADAVPROJECT(root, username)
     root.mainloop()

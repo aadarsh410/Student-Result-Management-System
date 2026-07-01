@@ -1,105 +1,156 @@
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
-import sqlite3
 import hashlib
 import os
 import sys
 import subprocess
 
-# ----------------- Database Setup -----------------
-def init_db():
-    conn = sqlite3.connect("users.db")
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+from database import get_connection, initialize_database
 
-# ----------------- Password Hashing -----------------
+
+# ======================================================
+# Password Hashing
+# ======================================================
+
 def hash_password(password):
     return hashlib.sha256(password.encode()).hexdigest()
 
-# ----------------- Login Function -----------------
+
+# ======================================================
+# Login Function
+# ======================================================
+
 def login():
     username = entry_username.get().strip()
     password = entry_password.get().strip()
 
-    if not username or not password:
-        messagebox.showerror("Error", "Please fill in all fields")
+    if username == "" or password == "":
+        messagebox.showerror("Error", "Please fill in all fields.")
         return
 
-    conn = sqlite3.connect("users.db")
-    cursor = conn.cursor()
+    try:
+        con = get_connection()
+        cur = con.cursor()
 
-    cursor.execute(
-        "SELECT * FROM users WHERE username=? AND password=?",
-        (username, hash_password(password))
-    )
+        cur.execute(
+            "SELECT * FROM users WHERE username=? AND password=?",
+            (username, hash_password(password))
+        )
 
-    user = cursor.fetchone()
-    conn.close()
+        user = cur.fetchone()
+        con.close()
 
-    if user:
-        messagebox.showinfo("Success", f"Welcome, {username}!")
-        root.destroy()
+        if user:
+            messagebox.showinfo("Login Successful", f"Welcome {username}")
 
-        # Open Main Dashboard
-        subprocess.Popen([sys.executable, "app.py"])
+            root.destroy()
 
-    else:
-        messagebox.showerror("Login Failed", "Invalid Username or Password")
+            subprocess.Popen([sys.executable, "app.py"])
 
-# ----------------- Open Register Window -----------------
+        else:
+            messagebox.showerror(
+                "Login Failed",
+                "Invalid Username or Password."
+            )
+
+    except Exception as e:
+        messagebox.showerror("Database Error", str(e))
+
+
+# ======================================================
+# Open Register Window
+# ======================================================
+
 def open_register():
     root.destroy()
     subprocess.Popen([sys.executable, "register.py"])
 
-# ----------------- GUI -----------------
+
+# ======================================================
+# Initialize Database
+# ======================================================
+
+initialize_database()
+
+
+# ======================================================
+# GUI
+# ======================================================
+
 root = tk.Tk()
-root.title("Student Result Management System - Login")
+root.title("Student Result Management System")
 root.geometry("1366x768")
 root.resizable(False, False)
 
-# ----------------- Background -----------------
+
+# ======================================================
+# Background
+# ======================================================
+
 if os.path.exists("background.jpg"):
-    bg_img = Image.open("background.jpg").resize((1366, 768), Image.LANCZOS)
+    bg_img = Image.open("background.jpg")
+    bg_img = bg_img.resize((1366, 768), Image.LANCZOS)
     bg_photo = ImageTk.PhotoImage(bg_img)
 
     bg_label = tk.Label(root, image=bg_photo)
     bg_label.image = bg_photo
     bg_label.place(x=0, y=0)
+
 else:
     root.config(bg="white")
 
-# ----------------- Login Frame -----------------
-frame_login = tk.Frame(root, bg="white", bd=5, relief="ridge")
-frame_login.place(relx=0.5, rely=0.5, anchor="center", width=400, height=350)
 
-# ----------------- Logo -----------------
+# ======================================================
+# Login Frame
+# ======================================================
+
+frame_login = tk.Frame(root, bg="white", bd=5, relief="ridge")
+frame_login.place(
+    relx=0.5,
+    rely=0.5,
+    anchor="center",
+    width=400,
+    height=350
+)
+
+
+# ======================================================
+# Logo
+# ======================================================
+
 if os.path.exists("logo.png"):
-    logo_img = Image.open("logo.png").resize((80, 80), Image.LANCZOS)
+    logo_img = Image.open("logo.png")
+    logo_img = logo_img.resize((80, 80), Image.LANCZOS)
     logo_photo = ImageTk.PhotoImage(logo_img)
 
-    logo_label = tk.Label(frame_login, image=logo_photo, bg="white")
+    logo_label = tk.Label(
+        frame_login,
+        image=logo_photo,
+        bg="white"
+    )
+
     logo_label.image = logo_photo
     logo_label.pack(pady=10)
 
-# ----------------- Title -----------------
+
+# ======================================================
+# Title
+# ======================================================
+
 tk.Label(
     frame_login,
     text="Login",
     font=("Arial", 20, "bold"),
     bg="white",
-    fg="#333"
+    fg="#333333"
 ).pack(pady=10)
 
-# ----------------- Username -----------------
+
+# ======================================================
+# Username
+# ======================================================
+
 tk.Label(
     frame_login,
     text="Username",
@@ -107,10 +158,18 @@ tk.Label(
     bg="white"
 ).pack(pady=5)
 
-entry_username = tk.Entry(frame_login, font=("Arial", 14))
+entry_username = tk.Entry(
+    frame_login,
+    font=("Arial", 14)
+)
+
 entry_username.pack(pady=5)
 
-# ----------------- Password -----------------
+
+# ======================================================
+# Password
+# ======================================================
+
 tk.Label(
     frame_login,
     text="Password",
@@ -118,32 +177,42 @@ tk.Label(
     bg="white"
 ).pack(pady=5)
 
-entry_password = tk.Entry(frame_login, font=("Arial", 14), show="*")
+entry_password = tk.Entry(
+    frame_login,
+    font=("Arial", 14),
+    show="*"
+)
+
 entry_password.pack(pady=5)
 
-# ----------------- Buttons -----------------
+
+# ======================================================
+# Buttons
+# ======================================================
+
 tk.Button(
     frame_login,
     text="Login",
     font=("Arial", 14),
-    command=login,
     bg="#4CAF50",
     fg="white",
-    width=15
+    width=15,
+    command=login
 ).pack(pady=10)
 
 tk.Button(
     frame_login,
     text="Register",
     font=("Arial", 14),
-    command=open_register,
     bg="#2196F3",
     fg="white",
-    width=15
+    width=15,
+    command=open_register
 ).pack()
 
-# ----------------- Initialize Database -----------------
-init_db()
 
-# ----------------- Run Application -----------------
+# ======================================================
+# Run Application
+# ======================================================
+
 root.mainloop()
