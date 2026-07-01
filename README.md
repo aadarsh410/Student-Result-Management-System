@@ -42,17 +42,26 @@ This project was developed to automate the process of managing student informati
 ```text
 Student-Result-Management-System/
 │
-├── login.py
-├── register.py
-├── student.py
-├── course.py
-├── result.py
-├── report.py
-├── create_db.py
-├── requirements.txt
-├── README.md
+├── app.py                  # Main dashboard of the application
+├── login.py                # User login system
+├── register.py             # User registration system
+├── database.py             # Centralized SQLite database connection
+├── course.py               # Course management (CRUD operations)
+├── student.py              # Student management (CRUD operations)
+├── result.py               # Add and manage student results
+├── report.py               # View and search student reports
+│
+├── result_management.db    # SQLite database (generated automatically)
+│
+├── background.jpg          # Login/Register background image
+├── logo.png                # Application logo
+│
 ├── images/
-└── screenshots/
+│   └── result img 1.jpg    # Result module illustration
+│
+├── requirements.txt        # Python dependencies
+├── README.md               # Project documentation
+├── LICENSE                 # MIT License
 ```
 
 ---
